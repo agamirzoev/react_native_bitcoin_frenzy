@@ -1,35 +1,50 @@
 import React, { memo } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
+import { Appbar, Text } from 'react-native-paper';
+
+import { MaterialIcons as HistoryIcon } from '@expo/vector-icons';
+
+import AuthBar from './AuthBar';
+import MainMenu from './MainMenu';
 
 import logo from '../../assets/logo.png';
-
-import styles from './styles.js';
+import styles from './styles';
 
 const Header = () => {
+  const isLogin = true;
   return (
-    <View className={styles.logo}>
-      <View className="header__header-wrap header-wrap">
-        <View sx={{ display: 'flex' }}>
-          <Image className={styles.logo} source={logo} alt="logo" />
-          <Text className="header-wrap__app-name app-name" component="div">
-            BITCOIN FRENZY
-          </Text>
+    <Appbar.Header style={styles.header}>
+      <View style={styles.headerWrapper}>
+        {isLogin
+          ? (
+            <View style={styles.menu}>
+              <MainMenu />
+            </View>
+          )
+          : null}
+        <View style={styles.logoAndAppName}>
+          <Image style={styles.logo} source={logo} alt="logo" />
+          <Appbar.Content title="BITCOIN FRENZY" style={styles.app} titleStyle={styles.appName} />
         </View>
-        <View className="header-wrap__header-toolbar header-toolbar">
-          <Text className="header-toolbar__btc-price btc-price" component="div">
-            1 Bitcoin = 1234 $
-          </Text>
-          <View className="header-toolbar__wallet-amount wallet-amount">
-            <Text className="wallet-amount__box" component="div">
-              1000 $
-            </Text>
-            <Text className="wallet-amount__box" component="div">
-              10 BITCOINS
-            </Text>
-          </View>
-        </View>
+        <HistoryIcon name="history" size={24} color="#fff" />
       </View>
-    </View>
+      {isLogin
+        ? (
+          <View style={styles.headerToolbar}>
+            <>
+              <Appbar.Content titleStyle={styles.btcExchangeRate} title="1 Bitcoin = 1234 $" />
+              <View style={styles.wallet}>
+                <Text style={{ color: '#fff' }}> Wallet: </Text>
+                <Appbar.Content titleStyle={styles.walletAmount} title="1000 $" style={{ flex: 0, paddingHorizontal: 6 }} />
+                <Appbar.Content titleStyle={styles.bitcoinAmount} title="10 BITCOINS" style={{ flex: 0, paddingHorizontal: 6 }} />
+              </View>
+            </>
+          </View>
+        )
+        : (
+          <AuthBar />
+        )}
+    </Appbar.Header>
   );
 };
 

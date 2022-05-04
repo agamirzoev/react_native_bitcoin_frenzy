@@ -1,29 +1,47 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { memo } from 'react';
+import { Provider } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import 'react-native-gesture-handler';
+
 import { StatusBar } from 'expo-status-bar';
-import {
-  StyleSheet, Text, View, AppRegistry,
-} from 'react-native';
+import store from './redux/store';
 
-import Header from './components/Header/Header';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import Header from './components/Header';
+import WalletScreen from './screens/WalletScreen';
+import BuyBitcoinScreen from './screens/BuyBitcoinScreen';
+import SellBitcoinScreen from './screens/SellBitcoinScreen';
+import BitcoinPriceScreen from './screens/BitcoinPriceScreen';
+import AuthScreen from './screens/AuthScreen';
 
 const App = () => {
-  AppRegistry.registerComponent('main', () => App);
-
+  const Stack = createStackNavigator();
+  const isLogin = false;
+  const initialRoute = isLogin ? 'Wallet' : 'Auth';
   return (
-    <View style={styles.container}>
-      <Header />
-      <Text> Blah Blah Blah !</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StatusBar style="auto" />
+        <Stack.Navigator
+          initialRouteName={initialRoute}
+          screenOptions={{
+            header: () => <Header />,
+          }}
+        >
+          {isLogin
+            ? (
+              <>
+                <Stack.Screen name="Wallet" component={WalletScreen} />
+                <Stack.Screen name="Buy Bitcoin" component={BuyBitcoinScreen} />
+                <Stack.Screen name="Sell Bitcoin" component={SellBitcoinScreen} />
+                <Stack.Screen name="Bitcoin Price" component={BitcoinPriceScreen} />
+              </>
+            )
+            : <Stack.Screen name="Auth" component={AuthScreen} />}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 
